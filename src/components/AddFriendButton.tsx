@@ -69,12 +69,11 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
           className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         />
         <Button isLoading={isLoading}>Add</Button>
-
-        <p className="mt-1 text-sm text-red-600">{errors.email?.message}</p>
-        {showSuccessState ? (
-          <p className="mt-1 text-sm text-green-600">Friend request sent!</p>
-        ) : null}
       </div>
+      <p className="mt-1 text-sm text-red-600">{errors.email?.message}</p>
+      {showSuccessState ? (
+        <p className="mt-1 text-sm text-green-600">Friend request sent!</p>
+      ) : null}
     </form>
   );
 };
