@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
   },
@@ -33,26 +34,30 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const dbUser = (await db.get(`user: ${token.id}`)) as User | null;
+      if (user) {
+        const dbUser = (await db.get(`user: ${token.id}`)) as User | null;
 
-      if (!dbUser) {
-        token.id = user!.id;
-        return token;
+        if (dbUser) {
+          return {
+            id: dbUser.id,
+            name: dbUser.name,
+            email: dbUser.email,
+            image: dbUser.image,
+          };
+        } else {
+          token.id = user.id;
+        }
       }
 
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        image: dbUser.image,
-      };
+      return token;
     },
+
     async session({ session, token }) {
       if (token) {
-        (session.user.id = token.id),
-          (session.user.name = token.name),
-          (session.user.email = token.email),
-          (session.user.image = token.picture);
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
       }
 
       return session;
