@@ -9,9 +9,9 @@ export const Icons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="#068FFF"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className="lucide lucide-message-square-dashed"
     >
       <path d="M3 6V5c0-1.1.9-2 2-2h2" />
