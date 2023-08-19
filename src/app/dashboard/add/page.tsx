@@ -4,7 +4,7 @@ import { FC } from "react";
 const page: FC = () => {
   return (
     <main className="py-8">
-      <h1 className="font-bold text-5xl mb-8">Add a friend</h1>
+      <h1 className="font-bold text-5xl mb-4">Add a friend</h1>
 
       <AddFriendButton />
     </main>
