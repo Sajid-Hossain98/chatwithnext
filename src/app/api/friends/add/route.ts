@@ -42,6 +42,7 @@ export async function POST(req: Request) {
       });
     }
 
+    //sent a request already
     const isAlreadyAdded = (await fetchRedis(
       "sismember",
       `user:${idToAdd}:incoming_friend_request`,
