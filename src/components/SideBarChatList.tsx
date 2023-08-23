@@ -1,6 +1,7 @@
 "use client";
 
 import { chatHrefConstructor } from "@/lib/utils";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 
@@ -40,7 +41,19 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
               )}`}
               className="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
             >
-              {friend.name}
+              <span className="flex items-center gap-2">
+                <div className="relative h-8 w-8">
+                  <Image
+                    fill
+                    src={friend.image}
+                    alt={`${friend.name} profile pic`}
+                    className="rounded-full h-full w-full"
+                  />
+                </div>
+
+                {friend.name}
+              </span>
+
               {unseenMessagesCount > 0 ? (
                 <div className="bg-indigo-600 font-medium text-xs text-white w-4 h-4 rounded-full flex items-center justify-center">
                   {unseenMessagesCount}
