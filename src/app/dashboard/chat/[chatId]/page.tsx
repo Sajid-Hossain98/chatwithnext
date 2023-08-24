@@ -38,6 +38,7 @@ async function getChatMessages(chatId: string) {
 
 const page: FC<pageProps> = async ({ params }: pageProps) => {
   const { chatId } = params;
+
   const session = await getServerSession(authOptions);
 
   if (!session) notFound();
@@ -55,9 +56,15 @@ const page: FC<pageProps> = async ({ params }: pageProps) => {
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
 
   //getting chatPartners info
-  const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
+  const chatPartnerRaw = (await fetchRedis(
+    "get",
+    `user:${chatPartnerId}`
+  )) as string;
+  const chatPartner = JSON.parse(chatPartnerRaw) as User;
 
   const initialMessages = await getChatMessages(chatId);
+
+  // console.log(initialMessages);
 
   return (
     <div className="flex flex-1 justify-between flex-col h-full max-h-[calc(100vh-6rem)]">
@@ -87,7 +94,12 @@ const page: FC<pageProps> = async ({ params }: pageProps) => {
         </div>
       </div>
 
-      <Messages initialMessages={initialMessages} sessionId={session.user.id} />
+      <Messages
+        initialMessages={initialMessages}
+        sessionId={session.user.id}
+        sessionImg={session.user.image}
+        chatPartner={chatPartner}
+      />
       <ChatInput chatPartner={chatPartner} chatId={chatId} />
     </div>
   );

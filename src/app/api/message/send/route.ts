@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 
     const message = messageValidator.parse(messageData);
 
-    //send message, all validation done
+    //send message, all validations done
     await db.zadd(`chat:${chatId}:messages`, {
       score: timestamp,
       member: JSON.stringify(message),
