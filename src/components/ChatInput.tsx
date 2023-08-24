@@ -19,6 +19,13 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
   const sendMessage = async () => {
     setIsLoading(true);
 
+    if (input.trim() === "") {
+      toast.error("Please write a message to send.");
+      setIsLoading(false);
+
+      return;
+    }
+
     try {
       await axios.post("/api/message/send", { text: input, chatId });
       setInput("");
@@ -36,7 +43,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
           ref={textareaRef}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault;
+              e.preventDefault();
               sendMessage();
             }
           }}

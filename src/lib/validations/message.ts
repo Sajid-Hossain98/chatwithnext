@@ -3,7 +3,7 @@ import { z } from "zod";
 export const messageValidator = z.object({
   id: z.string(),
   senderId: z.string(),
-  text: z.string(),
+  text: z.string().min(1),
   receiverId: z.string(),
   timestamp: z.number(),
 });
