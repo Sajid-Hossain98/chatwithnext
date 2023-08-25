@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { nanoid } from "nanoid";
 import { messageValidator } from "@/lib/validations/message";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {
@@ -47,6 +49,13 @@ export async function POST(req: Request) {
     };
 
     const message = messageValidator.parse(messageData);
+
+    //notify all connected chat clients
+    pusherServer.trigger(
+      toPusherKey(`chat:${chatId}`),
+      "incoming-message",
+      message
+    );
 
     //send message, all validations done
     await db.zadd(`chat:${chatId}:messages`, {
