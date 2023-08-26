@@ -5,10 +5,17 @@ import { chatHrefConstructor, toPusherKey } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import UnseenToastChat from "./UnseenToastChat";
 
 interface SideBarChatListProps {
   friends: User[];
   sessionId: string;
+}
+
+interface ExtendedMessage extends Message {
+  senderImg: string;
+  senderName: string;
 }
 
 const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
@@ -18,17 +25,35 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
 
   const pathName = usePathname();
 
-  const chatHandler = () => {
-    console.log("new chat message");
-  };
-
-  const newFriendHandler = () => {
-    router.refresh();
-  };
-
   useEffect(() => {
     pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
     pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+
+    const chatHandler = (message: ExtendedMessage) => {
+      const shouldNotify =
+        pathName !==
+        `/dashboard/chat/${chatHrefConstructor(sessionId, message.senderId)}`;
+
+      if (!shouldNotify) return;
+
+      //should be notified
+      toast.custom((t) => (
+        <UnseenToastChat
+          t={t}
+          sessionId={sessionId}
+          senderId={message.senderId}
+          senderImg={message.senderImg}
+          senderMessage={message.text}
+          senderName={message.senderName}
+        />
+      ));
+
+      setUnseenMessages((prev) => [...prev, message]);
+    };
+
+    const newFriendHandler = () => {
+      router.refresh();
+    };
 
     pusherClient.bind("new_message", chatHandler);
     pusherClient.bind("new_friend", newFriendHandler);
@@ -40,8 +65,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
       pusherClient.unbind("new_message", chatHandler);
       pusherClient.unbind("new_friend", newFriendHandler);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionId]);
+  }, [pathName, router, sessionId]);
 
   useEffect(() => {
     if (pathName.includes("chat")) {
