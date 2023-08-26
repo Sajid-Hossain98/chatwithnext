@@ -35,6 +35,29 @@ async function getChatMessages(chatId: string) {
   }
 }
 
+export async function generateMetadata({ params }: pageProps) {
+  const { chatId } = params;
+  const session = await getServerSession(authOptions);
+  if (!session) notFound();
+  const { user } = session;
+  const [userId1, userId2] = chatId.split("--");
+
+  //to determine which of the chat id is your chat partner's
+  const chatPartnerId = user.id === userId1 ? userId2 : userId1;
+
+  //getting chatPartners info
+  const chatPartnerRaw = (await fetchRedis(
+    "get",
+    `user:${chatPartnerId}`
+  )) as string;
+  const chatPartner = JSON.parse(chatPartnerRaw) as User;
+
+  return {
+    title: `Chatter-💬 | ${chatPartner.name}`,
+    description: `chat with ${chatPartner.email}`,
+  };
+}
+
 const page: FC<pageProps> = async ({ params }: pageProps) => {
   const { chatId } = params;
 
