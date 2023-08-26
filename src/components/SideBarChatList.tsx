@@ -1,6 +1,7 @@
 "use client";
 
-import { chatHrefConstructor } from "@/lib/utils";
+import { pusherClient } from "@/lib/pusher";
+import { chatHrefConstructor, toPusherKey } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -16,6 +17,31 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
   const router = useRouter();
 
   const pathName = usePathname();
+
+  const chatHandler = () => {
+    console.log("new chat message");
+  };
+
+  const newFriendHandler = () => {
+    router.refresh();
+  };
+
+  useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+
+    pusherClient.bind("new_message", chatHandler);
+    pusherClient.bind("new_friend", newFriendHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+
+      pusherClient.unbind("new_message", chatHandler);
+      pusherClient.unbind("new_friend", newFriendHandler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
 
   useEffect(() => {
     if (pathName.includes("chat")) {
