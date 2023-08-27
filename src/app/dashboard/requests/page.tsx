@@ -4,6 +4,15 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 
+//metadata
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chatter-💬 | Friend requests",
+  description:
+    "Get all the incoming friend request and either accept or delete them!",
+};
+
 const page = async () => {
   const session = await getServerSession(authOptions);
   if (!session) notFound();

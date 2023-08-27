@@ -1,6 +1,14 @@
 import AddFriendButton from "@/components/AddFriendButton";
 import { FC } from "react";
 
+//metadata
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chatter-💬 | Add friend",
+  description: "Send a friend request using email of an user!",
+};
+
 const page: FC = () => {
   return (
     <main className="py-8">
