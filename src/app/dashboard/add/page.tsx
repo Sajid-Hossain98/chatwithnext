@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 
 const page: FC = () => {
   return (
-    <main className="py-8">
-      <h1 className="font-bold text-5xl mb-4">Send a friend request!</h1>
+    <main className="py-8 px-4">
+      <h1 className="font-bold mt-8 md:mt-0 mb-4 text-3xl sm:text-4xl md:text-5xl">
+        Send a friend request!
+      </h1>
 
       <AddFriendButton />
     </main>

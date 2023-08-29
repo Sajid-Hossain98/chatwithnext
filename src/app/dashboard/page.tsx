@@ -26,7 +26,17 @@ const page = async ({}) => {
         -1
       )) as string[];
 
-      const lastMessage = JSON.parse(lastMessageRaw) as Message;
+      let lastMessage = null;
+
+      if (lastMessageRaw) {
+        try {
+          lastMessage = JSON.parse(lastMessageRaw) as Message;
+        } catch (error) {
+          console.error("Error parsing last message:", error);
+        }
+      }
+
+      // const lastMessage = JSON.parse(lastMessageRaw) as Message;
 
       return {
         ...friend,
@@ -36,8 +46,10 @@ const page = async ({}) => {
   );
 
   return (
-    <div className="container py-8">
-      <h1 className="font-bold text-5xl mb-8">Recent Chats</h1>
+    <div className="container py-8 mt-8 md:mt-0 px-4">
+      <h1 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-4 md:mb-8">
+        Recent Chats
+      </h1>
 
       {friendsWithLastMessage.length === 0 ? (
         <>
@@ -51,11 +63,12 @@ const page = async ({}) => {
               <Users2 />
             </Link>
 
-            <div className="relative max-w-xs h-[20rem]">
+            <div className="relative max-w-sm h-[15rem] md:h-[25rem] mt-4">
               <Image
                 fill
                 src="https://i.ibb.co/n3bgkcZ/question-illustration.png"
                 alt="no friends illustration"
+                className="object-contain"
               />
             </div>
           </div>
@@ -64,7 +77,7 @@ const page = async ({}) => {
         friendsWithLastMessage.map((friend) => (
           <div
             key={friend.id}
-            className="relative bg-zinc-50 border border-zinc-200  rounded-md"
+            className="relative bg-zinc-50 border border-zinc-200 rounded-md px-2"
           >
             <div className="absolute right-4 inset-y-0 flex items-center">
               <ChevronRight className="h-7 w-7 text-zinc-400" />
@@ -93,11 +106,11 @@ const page = async ({}) => {
                 <h4 className="text-lg font-semibold">{friend.name}</h4>
                 <p className="mt-1 max-w-md">
                   <span className="text-zinc-400">
-                    {friend.lastMessage.senderId === session.user.id
+                    {friend.lastMessage?.senderId === session.user.id
                       ? "You: "
                       : ""}
                   </span>
-                  {friend.lastMessage.text}
+                  {friend.lastMessage?.text}
                 </p>
               </div>
             </Link>

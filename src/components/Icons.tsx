@@ -12,7 +12,7 @@ export const Icons = {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="lucide lucide-message-square-dashed"
+      className="lucide lucide-message-square-dashed -ml-4 md:ml-0"
     >
       <path d="M3 6V5c0-1.1.9-2 2-2h2" />
       <path d="M11 3h3" />
