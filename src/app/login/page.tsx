@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/Icons";
 import Button from "@/components/ui/Button";
 import { signIn } from "next-auth/react";
 import { FC, useState } from "react";
@@ -23,11 +24,11 @@ const Login: FC<pageProps> = ({}) => {
   }
   return (
     <>
-      <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full flex flex-col items-center max-w-md space-y-8">
-          <div className="flex flex-col items-center gap-8">
-            Logo
-            <h2 className="mt-6 text-center font-bold text-3xl tracking-tight text-gray-900">
+      <div className="grid place-items-center w-screen h-screen">
+        <div className="w-full flex flex-col items-center space-y-8">
+          <div className="flex flex-col items-center gap-5">
+            <Icons.Logo height={100} width={100} />
+            <h2 className="text-center font-bold text-3xl md:text-5xl tracking-tight text-gray-900 font-mono">
               Sign in to your account
             </h2>
           </div>
@@ -35,7 +36,7 @@ const Login: FC<pageProps> = ({}) => {
           <Button
             isLoading={isLoading}
             type="button"
-            className="max-w-sm mx-auto w-max"
+            className="w-[50vw] md:w-[30vw] mt-0"
             onClick={loginWithGoogle}
           >
             {isLoading ? null : (
