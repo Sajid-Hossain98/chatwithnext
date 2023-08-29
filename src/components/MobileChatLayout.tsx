@@ -86,7 +86,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                           </div>
                         </div>
                       </div>
-                      <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                      <div className="relative mt-6 flex-1 px-4 sm:px-6 flex justify-between">
                         {/* Content */}
 
                         {friends.length > 0 ? (

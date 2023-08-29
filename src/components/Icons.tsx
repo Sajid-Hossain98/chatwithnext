@@ -4,15 +4,15 @@ export const Icons = {
   Logo: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="40"
-      height="40"
+      width={props.width}
+      height={props.height}
       viewBox="0 0 24 24"
       fill="none"
       stroke="#068FFF"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="lucide lucide-message-square-dashed -ml-4 md:ml-0"
+      className="lucide lucide-message-square-dashed -ml-4 -mr-7 md:ml-0 md:mr-0"
     >
       <path d="M3 6V5c0-1.1.9-2 2-2h2" />
       <path d="M11 3h3" />
