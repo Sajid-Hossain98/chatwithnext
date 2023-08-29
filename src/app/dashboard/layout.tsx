@@ -3,27 +3,22 @@ import { getServerSession } from "next-auth";
 import { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Icon, Icons } from "@/components/Icons";
+import { Icons } from "@/components/Icons";
 import Image from "next/image";
 import SIgnOutButton from "@/components/SignOutButton";
 import FriendRequestSidebarOption from "@/components/FriendRequestSidebarOption";
 import { fetchRedis } from "@/helpers/redis";
 import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
 import SideBarChatList from "@/components/SideBarChatList";
+import MobileChatLayout from "@/components/MobileChatLayout";
+import { SidebarOption } from "@/types/typings";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-interface SideBarOptions {
-  id: number;
-  name: string;
-  href: string;
-  icon: Icon;
-}
-
-const sideBarOptions: SideBarOptions[] = [
-  { id: 1, name: "Add Friend", href: "/dashboard/add", icon: "UserPlus" },
+const sideBarOptions: SidebarOption[] = [
+  { id: 1, name: "Add Friend", href: "/dashboard/add", Icon: "UserPlus" },
 ];
 
 const Layout = async ({ children }: LayoutProps) => {
@@ -41,7 +36,16 @@ const Layout = async ({ children }: LayoutProps) => {
 
   return (
     <div className="w-full flex h-screen">
-      <div className="flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden border-r border-gray-200 px-6">
+      <div className="md:hidden">
+        <MobileChatLayout
+          friends={friends}
+          session={session}
+          sidebarOptions={sideBarOptions}
+          unseenRequestCount={unseenRequestCount}
+        />
+      </div>
+
+      <div className="md:flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden border-r border-gray-200 px-6 hidden">
         <Link
           href={"/dashboard"}
           className="flex h-16 w-fit shrink-0 items-center"
@@ -67,7 +71,7 @@ const Layout = async ({ children }: LayoutProps) => {
 
               <ul role="list" className="-mx-2 mt-2 space-y-1">
                 {sideBarOptions.map((option) => {
-                  const Icon = Icons[option.icon];
+                  const Icon = Icons[option.Icon];
 
                   return (
                     <li key={option.id}>
@@ -94,8 +98,8 @@ const Layout = async ({ children }: LayoutProps) => {
               </ul>
             </li>
 
-            <li className="-mx-6 mt-auto flex items-center">
-              <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
+            <li className="-mx-6 mt-auto flex items-center justify-between">
+              <div className="flex items-center gap-x-2 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
                 <div className="relative h-8 w-8">
                   <Image
                     fill
