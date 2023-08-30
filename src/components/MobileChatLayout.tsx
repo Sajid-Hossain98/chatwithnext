@@ -65,7 +65,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                   leaveTo="-translate-x-full"
                 >
                   <Dialog.Panel className="pointer-events-auto w-screen">
-                    <div className="flex h-full flex-col overflow-hidden bg-white py-6 shadow-xl">
+                    <div className="flex h-full flex-col overflow-hidden bg-white py-6">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
                           <Link href="/dashboard">
@@ -86,7 +86,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                           </div>
                         </div>
                       </div>
-                      <div className="relative mt-6 flex-1 px-4 sm:px-6 flex justify-between">
+                      <div className="relative mt-6 flex-1 px-4 sm:px-6 flex flex-col justify-between">
                         {/* Content */}
 
                         {friends.length > 0 ? (
