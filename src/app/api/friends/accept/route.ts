@@ -45,21 +45,35 @@ export async function POST(req: Request) {
       });
     }
 
+    //fetching the user information and friend information who is being added
+    const [userRaw, friendRaw] = (await Promise.all([
+      fetchRedis(`get`, `user:${session.user.id}`),
+      fetchRedis(`get`, `user:${idToAdd}`),
+    ])) as [string, string];
+
+    const user = JSON.parse(userRaw) as User;
+    const friend = JSON.parse(friendRaw) as User;
+
     //notify user who sent the request
-    pusherServer.trigger(
-      toPusherKey(`user:${idToAdd}:friends`),
-      "new_friend",
-      {}
-    );
+    await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${idToAdd}:friends`),
+        "new_friend",
+        user
+      ),
+      pusherServer.trigger(
+        toPusherKey(`user:${session.user.id}:friends`),
+        "new_friend",
+        friend
+      ),
 
-    //to add the user who sent the request to the user's friends list who is accepting the request
-    await db.sadd(`user:${session.user.id}:friends`, idToAdd);
-    //to also add the one who is accepting the request to the friends list of who is being added
-    await db.sadd(`user:${idToAdd}:friends`, session.user.id);
+      //to add the user who sent the request to the user's friends list who is accepting the request
+      db.sadd(`user:${session.user.id}:friends`, idToAdd),
+      //to also add the one who is accepting the request to the friends list of who is being added
+      db.sadd(`user:${idToAdd}:friends`, session.user.id),
 
-    // await db.srem(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
-
-    await db.srem(`user:${session.user.id}:incoming_friend_requests`, idToAdd);
+      db.srem(`user:${session.user.id}:incoming_friend_requests`, idToAdd),
+    ]);
 
     return new Response("OK");
   } catch (error) {
